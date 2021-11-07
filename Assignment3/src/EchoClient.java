@@ -7,9 +7,11 @@ public class EchoClient{
 		BufferedReader input = null;
 
 		try{
-			link = new Socket("127.0.0.1", 50000);
+			System.out.println("[CONNECTING TO SERVER ON PORT 8000]");
+			link = new Socket(InetAddress.getLocalHost(), 8000);
 			output = new PrintWriter(link.getOutputStream(), true);
 			input = new BufferedReader(new InputStreamReader(link.getInputStream()));
+			System.out.println("[CONNECTED TO SERVER]");
 		}
 		catch(UnknownHostException e)
 		{
@@ -20,11 +22,21 @@ public class EchoClient{
 			System.out.println("Cannot connect to host");
 			System.exit(1);
 		}
+
 		BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 		String usrInput;
+
+		System.out.println("Welcome to the Server!\n\n" +
+				"----- Here is a List Options: ----- \n " +
+				"/myip ----- will allow you to look up your ip address\n" +
+				"/iplookup ----- will allow you to look up the ip of a URL\n" +
+				"/exit, /quit, /disconnect ---- allows you to disconnect from the server\n\n" +
+				"Enter a message:");
+
+
 		while ((usrInput = stdIn.readLine())!=null){
 			output.println(usrInput);
-			System.out.println("echo: " + input.readLine());
+			System.out.println("echo: " + input.readLine() +"\n Enter a message:");
 		}
 		output.close();
 		input.close();
