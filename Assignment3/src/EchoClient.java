@@ -38,6 +38,7 @@ public class EchoClient{
 			String currentInput = usrInput + "\n";
 			output.println(usrInput);
 			System.out.println("echo: " + input.readLine());
+			output.flush();
 
 			switch(currentInput){
 				case "echo: /quit":

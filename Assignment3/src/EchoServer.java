@@ -34,7 +34,8 @@ public class EchoServer{
 		BufferedReader input = new BufferedReader(new InputStreamReader(link.getInputStream()));
 		String inputLine;
 		while ((inputLine = input.readLine())!=null) {
-            String currentMessage = inputLine;
+			String currentMessage = inputLine;
+			System.out.println("Server: " + currentMessage);
 			switch(currentMessage){
 				case "/myip":
 					MyLocalIPAddress myIP = new MyLocalIPAddress();
@@ -45,14 +46,17 @@ public class EchoServer{
 
 				case "/iplookup":
 					IPFinder ipFinder = new IPFinder();
-					UrlValidator validator = new UrlValidator();
-					output.println("Enter Website URL:\n");
-					String websiteInput = input.readLine();
-					if(validator.isValid(websiteInput)){
-						String ipAddress = ipFinder.find(websiteInput);
-						output.println(ipAddress);
+//					UrlValidator validator = new UrlValidator();
+					System.out.println("[REQUESTING URL FROM CLIENT!]");
+					output.println("Enter Website URL:");
+					output.flush();
+					inputLine = input.readLine();
+//					if(validator.isValid(inputLine)){
+						String ipAddress = ipFinder.find(inputLine);
 						System.out.println(ipAddress);
-					}
+						output.println(ipAddress);
+// 					}
+					break;
 
 				case "/killserver":
 					System.out.println("[CLIENT REQUESTED SERVER SHUTDOWN!]");
@@ -63,15 +67,15 @@ public class EchoServer{
 					break;
 
 				case "exit":
-
 				case "quit":
-
 				case "disconnect":
 					disconnectClient(output, input, link, serverSock);
 					break;
+				default:
+					output.println(currentMessage);
 			}
-			System.out.println("Server: " + currentMessage);
-			output.println(currentMessage);
+
+
 
 		}
 
@@ -90,7 +94,4 @@ public class EchoServer{
 		input.close();
 		link.close();
 	}
-
-
-
 }
