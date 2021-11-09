@@ -33,28 +33,22 @@ public class EchoClient{
 				"/exit, /quit, /disconnect ---- allows you to disconnect from the server\n\n" +
 				"Enter a message:");
 
+		//User Input
 		while ((usrInput = stdIn.readLine())!=null){
-			String currentInput = usrInput;
+			String currentInput = usrInput + "\n";
 			output.println(usrInput);
 			System.out.println("echo: " + input.readLine());
 
 			switch(currentInput){
-				case "/quit":
-					System.exit(1);
+				case "echo: /quit":
+				case "echo: /disconnect":
+				case "echo: /killserver":
+					output.close();
+					input.close();
+					stdIn.close();
+					link.close();
 					break;
-				case "/exit":
-					System.exit(1);
-					break;
-				case "/disconnect":
-					System.exit(1);
-					break;
-				case "/killserver":
-					System.exit(1);
 			}
 		}
-		output.close();
-		input.close();
-		stdIn.close();
-		link.close();
 	}
 }

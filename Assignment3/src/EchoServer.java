@@ -1,5 +1,3 @@
-import com.sun.security.ntlm.Server;
-
 import java.net.*;
 import java.io.*;
 import java.util.concurrent.TimeUnit;
@@ -37,9 +35,6 @@ public class EchoServer{
 		String inputLine;
 		while ((inputLine = input.readLine())!=null) {
             String currentMessage = inputLine;
-			System.out.println("Server: " + currentMessage);
-			output.println(inputLine);
-
 			switch(currentMessage){
 				case "/myip":
 					MyLocalIPAddress myIP = new MyLocalIPAddress();
@@ -75,7 +70,11 @@ public class EchoServer{
 					disconnectClient(output, input, link, serverSock);
 					break;
 			}
+			System.out.println("Server: " + currentMessage);
+			output.println(currentMessage);
+
 		}
+
 	}
 	public static void closeServer(PrintWriter output, BufferedReader input, Socket link, ServerSocket serverSock) throws IOException {
 		output.close();
