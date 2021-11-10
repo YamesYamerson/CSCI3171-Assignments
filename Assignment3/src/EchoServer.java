@@ -70,7 +70,6 @@ public class EchoServer{
 						System.out.println("[GUESS THE NUMBER GAME ABORTING]");
 						output.println("Quitting guess the number game");
 						break;
-
 					}else if(inputLine != "Y" || inputLine != "N") {
 						System.out.println("[CLIENT PROVIDED FAULTY INPUT]");
 						output.println("Input not recognized, game aborting!");

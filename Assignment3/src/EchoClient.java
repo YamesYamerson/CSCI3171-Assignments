@@ -28,10 +28,11 @@ public class EchoClient{
 
 		System.out.println("Welcome to the Server!\n\n" +
 				"----- Here is a List Options: ----- \n " +
-				"/myip ----- will allow you to look up your ip address\n" +
-				"/iplookup ----- will allow you to look up the ip of a URL\n" +
+				"/myip ----- allows you to look up your ip address\n" +
+				"/iplookup ----- allows you to look up the ip of a URL\n" +
+				"/numbergame ----- allows user to play a number game\n" +
 				"/exit, /quit, /disconnect ---- allows you to disconnect from the server\n\n" +
-				"Enter a message:");
+				"Welcome to the server, enter a message:");
 
 		//User Input
 		while ((usrInput = stdIn.readLine())!=null){
@@ -42,9 +43,11 @@ public class EchoClient{
 
 			switch(currentInput){
 				case "echo: Enter Website URL:":
-					output.flush();
 				case "iplookup terminating...":
+				case "Would you like to play the number game (Y/N)?":
+				case "Quitting guess the number game":
 					output.flush();
+					break;
 				case "echo: /quit":
 				case "echo: /disconnect":
 				case "echo: /killserver":
