@@ -35,12 +35,14 @@ public class EchoClient{
 
 		//User Input
 		while ((usrInput = stdIn.readLine())!=null){
-			String currentInput = usrInput + "\n";
+			String currentInput = usrInput;
 			output.println(usrInput);
 			System.out.println("echo: " + input.readLine());
 			output.flush();
 
 			switch(currentInput){
+				case "echo: Enter Website URL:":
+					output.flush();
 				case "echo: /quit":
 				case "echo: /disconnect":
 				case "echo: /killserver":

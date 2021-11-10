@@ -46,21 +46,42 @@ public class EchoServer{
 
 				case "/iplookup":
 					IPFinder ipFinder = new IPFinder();
-//					UrlValidator validator = new UrlValidator();
+					UrlValidator validator = new UrlValidator();
 					System.out.println("[REQUESTING URL FROM CLIENT!]");
 					output.println("Enter Website URL:");
-					output.flush();
 					inputLine = input.readLine();
-//					if(validator.isValid(inputLine)){
-						String ipAddress = ipFinder.find(inputLine);
-						System.out.println(ipAddress);
-						output.println(ipAddress);
-// 					}
+					System.out.println("Server: " + inputLine);
+
+//	TO DO:				if(validator.isValid(inputLine)){
+					String ipAddress = ipFinder.find(inputLine);
+					System.out.println(ipAddress);
+					output.println(ipAddress);
+
+					break;
+
+				case "/numbergame":
+					System.out.println("[CLIENT HAS INITIATED GUESS THE NUMBER GAME!]");
+					output.println("Would you like to play the number game (Y/N)?");
+					inputLine = input.readLine();
+					if(inputLine == "Y"){
+						System.out.println("[CLIENT REQUESTS TO BEGIN A GAME!]");
+						inputLine = input.readLine();
+
+					}else if(inputLine != "Y" || inputLine != "N"){
+						int counter = 0;
+						while(counter < 3) {
+							System.out.println("[CLIENT PROVIDED FAULTY INPUT]");
+							output.println("Your input was incorrect, try again!");
+						}
+						if(counter == 3){
+							System.out.println("[GUESS THE NUMBER GAME ABORTING]");
+						}
+					}
 					break;
 
 				case "/killserver":
 					System.out.println("[CLIENT REQUESTED SERVER SHUTDOWN!]");
-					TimeUnit.SECONDS.sleep(5);
+					TimeUnit.SECONDS.sleep(3);
 					System.out.println("[SERVER IS SHUTTING DOWN!");
 					TimeUnit.SECONDS.sleep(3);
 					closeServer(output, input, link, serverSock);
@@ -74,11 +95,7 @@ public class EchoServer{
 				default:
 					output.println(currentMessage);
 			}
-
-
-
 		}
-
 	}
 	public static void closeServer(PrintWriter output, BufferedReader input, Socket link, ServerSocket serverSock) throws IOException {
 		output.close();
