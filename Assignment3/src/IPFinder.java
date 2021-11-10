@@ -5,11 +5,11 @@ public class IPFinder{
 		try
 		{
 			InetAddress address = InetAddress.getByName(host);
-			return("IP address: " + address + "\n");
+			return("IP address: " + address);
 		}
 		catch (UnknownHostException e)
 		{
-			return("  Could not find " + host + "\n");
+			return("  Could not find " + host);
 		}
 	}
 }

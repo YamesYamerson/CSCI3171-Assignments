@@ -43,6 +43,8 @@ public class EchoClient{
 			switch(currentInput){
 				case "echo: Enter Website URL:":
 					output.flush();
+				case "iplookup terminating...":
+					output.flush();
 				case "echo: /quit":
 				case "echo: /disconnect":
 				case "echo: /killserver":

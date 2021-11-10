@@ -46,37 +46,37 @@ public class EchoServer{
 
 				case "/iplookup":
 					IPFinder ipFinder = new IPFinder();
-					UrlValidator validator = new UrlValidator();
+//					UrlValidator validator = new UrlValidator();
 					System.out.println("[REQUESTING URL FROM CLIENT!]");
 					output.println("Enter Website URL:");
 					inputLine = input.readLine();
 					System.out.println("Server: " + inputLine);
-
+					output.flush();
 //	TO DO:				if(validator.isValid(inputLine)){
-					String ipAddress = ipFinder.find(inputLine);
+					String ipAddress = ipFinder.find(inputLine) + " ==>  [IPLOOKUP TERMINATING]";
 					System.out.println(ipAddress);
 					output.println(ipAddress);
-
+					System.out.println("[IPLOOKUP FUNCTION TERMINATING!]");
 					break;
 
 				case "/numbergame":
 					System.out.println("[CLIENT HAS INITIATED GUESS THE NUMBER GAME!]");
 					output.println("Would you like to play the number game (Y/N)?");
 					inputLine = input.readLine();
-					if(inputLine == "Y"){
+					if(inputLine.equalsIgnoreCase("Y")){
 						System.out.println("[CLIENT REQUESTS TO BEGIN A GAME!]");
 						inputLine = input.readLine();
+					}else if(inputLine.equalsIgnoreCase("N")){
+						System.out.println("[GUESS THE NUMBER GAME ABORTING]");
+						output.println("Quitting guess the number game");
+						break;
 
-					}else if(inputLine != "Y" || inputLine != "N"){
-						int counter = 0;
-						while(counter < 3) {
-							System.out.println("[CLIENT PROVIDED FAULTY INPUT]");
-							output.println("Your input was incorrect, try again!");
-						}
-						if(counter == 3){
-							System.out.println("[GUESS THE NUMBER GAME ABORTING]");
-						}
+					}else if(inputLine != "Y" || inputLine != "N") {
+						System.out.println("[CLIENT PROVIDED FAULTY INPUT]");
+						output.println("Input not recognized, game aborting!");
+						break;
 					}
+
 					break;
 
 				case "/killserver":
@@ -98,6 +98,7 @@ public class EchoServer{
 		}
 	}
 	public static void closeServer(PrintWriter output, BufferedReader input, Socket link, ServerSocket serverSock) throws IOException {
+		System.out.println("[CLIENT REQUESTED TO CLOSE SERVER!");
 		output.close();
 		input.close();
 		link.close();
