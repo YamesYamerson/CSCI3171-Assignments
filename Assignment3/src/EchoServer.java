@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 public class EchoServer{
 
 	public static void main(String[] args) throws Exception {
-
 		//Initializes and attempts to connect server
 		ServerSocket serverSock = null;
 		try{
@@ -35,55 +34,123 @@ public class EchoServer{
 		String inputLine;
 		while ((inputLine = input.readLine())!=null) {
 			String currentMessage = inputLine;
-			System.out.println("Server: " + currentMessage);
+			System.out.println("[SERVER:] " + currentMessage);
 			switch(currentMessage){
-				case "/myip":
+				case "/myip":											//Looks up local IP address of client
 					MyLocalIPAddress myIP = new MyLocalIPAddress();
 					String ip = myIP.run();
 					output.println(ip);
 					System.out.println(ip);
 					break;
-
-				case "/iplookup":
+				case "/iplookup":										//Looks up IP of user input website
 					IPFinder ipFinder = new IPFinder();
-//					UrlValidator validator = new UrlValidator();
+//	TO DO:				UrlValidator validator = new UrlValidator();
 					System.out.println("[REQUESTING URL FROM CLIENT!]");
 					output.println("Enter Website URL:");
 					inputLine = input.readLine();
 					System.out.println("Server: " + inputLine);
-					output.flush();
-//	TO DO:				if(validator.isValid(inputLine)){
+//	TO DO:			if(validator.isValid(inputLine)) {                    //Regex to validate user input
 					String ipAddress = ipFinder.find(inputLine) + " ==>  [IPLOOKUP TERMINATING]";
 					System.out.println(ipAddress);
 					output.println(ipAddress);
 					System.out.println("[IPLOOKUP FUNCTION TERMINATING!]");
 					break;
 
-				case "/numbergame":
+				case "/numbergame":											//Starts a number guessing game
+					boolean isPlaying;
+					int randomNumber = -1;
+					final int maxNum = 100;
 					System.out.println("[CLIENT HAS INITIATED GUESS THE NUMBER GAME!]");
 					output.println("Would you like to play the number game (Y/N)?");
 					inputLine = input.readLine();
 					if(inputLine.equalsIgnoreCase("Y")){
 						System.out.println("[CLIENT REQUESTS TO BEGIN A GAME!]");
-						inputLine = input.readLine();
+						isPlaying = true;
+						System.out.println("[SERVER IS PICKING A RANDOM NUMBER!]");
+						output.println("Enter A Number Between 0-100 (/endgame to quit)");
+						randomNumber = (int) Math.floor(Math.random() * maxNum + 1);
+						System.out.println("[RANDOM NUMBER IS: " + randomNumber + "]");
 					}else if(inputLine.equalsIgnoreCase("N")){
 						System.out.println("[GUESS THE NUMBER GAME ABORTING]");
 						output.println("Quitting guess the number game");
-						break;
-					}else if(inputLine != "Y" || inputLine != "N") {
-						System.out.println("[CLIENT PROVIDED FAULTY INPUT]");
+						isPlaying = false;
+					}else{
+						System.out.println("[CLIENT PROVIDED FAULTY INPUT, GAME ABORTING!]");
 						output.println("Input not recognized, game aborting!");
-						break;
+						isPlaying = false;
 					}
 
+					while(isPlaying) {
+						System.out.println("[REQUESTING NUMBER FROM CLIENT!]");
+						inputLine = input.readLine();
+						if (inputLine.equalsIgnoreCase("/endgame")) {
+							isPlaying = false;
+						}
+						if (isNumeric(inputLine)) {
+							int currentGuess = Integer.parseInt(inputLine);
+							if (randomNumber == currentGuess) {
+								System.out.println("[CLIENT HAS GUESSED THE CORRECT NUMBER, GAME TERMINATING!]");
+								output.println("You have guessed correctly! Game ending!");
+								isPlaying = false;
+							} else if (currentGuess > randomNumber) {
+								System.out.println("[CLIENT GUESSED TOO HIGH!]");
+								output.println("Too high! Guess again!");
+							} else if (currentGuess < randomNumber) {
+								System.out.println("[CLIENT GUESSED TOO LOW!]");
+								output.println("Too low! Guess again!");
+							}
+						}else if(inputLine.equalsIgnoreCase("/endgame")){
+							System.out.println("[CLIENT HAS REQUESTED TO END GAME - TERMINATING...]");
+							output.println("Quitting game, better luck next time!");
+							break;
+
+						}else{
+							System.out.println("[CLIENT HAS PROVIDED INCORRECT INPUT]");
+							output.println("You have not entered a valid number, try again!");
+						}
+					}
+					break;
+
+				case "/caesarcipher":
+					int maxKeyValue = 25;
+					int randomKey = (int) Math.floor(Math.random() * maxKeyValue + 1);
+					System.out.println("[CLIENT HAS INITIATED CAESAR CIPHER PROGRAM ----- CLIENT CAESAR CIPHER IS "
+							+ randomKey + " (Type 'bye' to exit)!]");
+					output.println("Your Caesar Cipher is " + randomKey + ". Enter a message to encrypt: ");
+					boolean active = true;
+					boolean firstCase = true;
+					while(active) {
+						if (inputLine.equalsIgnoreCase("/bye") ||
+								inputLine.equalsIgnoreCase("bye")) {
+							System.out.println("[CLIENT HAS REQUESTED TO END CAESAR CIPHER MODE!]");
+							output.println("Quitting Caesar cipher mode...");
+							break;
+						}
+						if (firstCase == false) {
+							CaesarCipher caesarCipher = new CaesarCipher();
+							currentMessage = input.readLine();
+							String decryptedMessage = caesarCipher.decrypt(currentMessage, randomKey);
+							System.out.println("[SERVER:] Received: " + currentMessage + " decrypts to ==> " +
+									decryptedMessage);
+							output.println(decryptedMessage);
+							output.flush();
+						}
+						firstCase = false;
+					}
+					break;
+
+				case "/secretmessage":
+					System.out.println("♡♡♡♡♡♡ Shahnaz ♡♡♡♡♡♡");
+					output.println("♡♡♡♡♡♡ Shahnaz ♡♡♡♡♡♡");
 					break;
 
 				case "/killserver":
 					System.out.println("[CLIENT REQUESTED SERVER SHUTDOWN!]");
-					TimeUnit.SECONDS.sleep(3);
+					TimeUnit.SECONDS.sleep(1);
 					System.out.println("[SERVER IS SHUTTING DOWN!");
-					TimeUnit.SECONDS.sleep(3);
+					TimeUnit.SECONDS.sleep(1);
 					closeServer(output, input, link, serverSock);
+					System.exit(1);
 					break;
 
 				case "exit":
@@ -103,6 +170,7 @@ public class EchoServer{
 		link.close();
 		serverSock.close();
 	}
+
 	public static void disconnectClient(PrintWriter output, BufferedReader input, Socket link, ServerSocket serverSock) throws IOException, InterruptedException {
 		output.println("[CLIENT REQUESTED TO CLOSE CONNECTION!");
 		TimeUnit.SECONDS.sleep(5);
@@ -110,5 +178,13 @@ public class EchoServer{
 		output.close();
 		input.close();
 		link.close();
+	}
+
+	//Tests to see if a string contains all numeric values
+	public static boolean isNumeric(String str) {
+		for (char c : str.toCharArray()){
+			if (!Character.isDigit(c)) return false;
+		}
+		return true;
 	}
 }
