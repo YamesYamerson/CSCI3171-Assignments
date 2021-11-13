@@ -68,7 +68,7 @@ public class EchoClient{
 							String encryptedMessage = caesarCipher.encrypt(currentMessage, serverKey);
 							output.println(encryptedMessage);
 							System.out.println("echo: " + message);
-
+							
 						}
 					}
 					break;
