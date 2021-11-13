@@ -24,12 +24,11 @@ public class CaesarCipher {
                 ciphertext = ciphertext + alphabet;
             }
 
-            // if alphabet lies between 'A'and 'Z'
+            //Alphabet is between 'A' and 'Z'
             else if(alphabet >= 'A' && alphabet <= 'Z') {
-                // shift alphabet
+                //Offset alphabet
                 alphabet = (char) (alphabet + offset);
-
-                // if shift alphabet greater than 'Z'
+                // Offset alphabet greater than 'Z'
                 if(alphabet > 'Z') {
                     //reshift to starting position
                     alphabet = (char) (alphabet+'A'-'Z'-1);
@@ -82,7 +81,5 @@ public class CaesarCipher {
             }
         }
         return(ciphertext);
-
     }
-
 }

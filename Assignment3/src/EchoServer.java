@@ -113,30 +113,30 @@ public class EchoServer{
 
 				case "/caesarcipher":
 					int maxKeyValue = 25;
+
 					int randomKey = (int) Math.floor(Math.random() * maxKeyValue + 1);
 					System.out.println("[CLIENT HAS INITIATED CAESAR CIPHER PROGRAM ----- CLIENT CAESAR CIPHER IS "
 							+ randomKey + " (Type 'bye' to exit)!]");
 					output.println("Your Caesar Cipher is " + randomKey + ". Enter a message to encrypt: ");
-					boolean active = true;
-					boolean firstCase = true;
-					while(active) {
-						if (inputLine.equalsIgnoreCase("/bye") ||
+					input.readLine();
+
+					while((inputLine = input.readLine()) != null) {
+						if (inputLine.equalsIgnoreCase("/caesarcipher")) {
+							output.println("Your Caesar Cipher is " + randomKey + ". Enter a message to encrypt: ");
+						}else if (inputLine.equalsIgnoreCase("/bye") ||
 								inputLine.equalsIgnoreCase("bye")) {
 							System.out.println("[CLIENT HAS REQUESTED TO END CAESAR CIPHER MODE!]");
 							output.println("Quitting Caesar cipher mode...");
 							break;
-						}
-						if (firstCase == false) {
+						}else{
 							CaesarCipher caesarCipher = new CaesarCipher();
 							currentMessage = input.readLine();
 							String decryptedMessage = caesarCipher.decrypt(currentMessage, randomKey);
-							System.out.println("[SERVER:] Received: " + currentMessage + " decrypts to ==> " +
+							System.out.println("[SERVER:] Received: " + currentMessage + " ==> " +
 									decryptedMessage);
-							output.println(decryptedMessage);
-							output.flush();
 						}
-						firstCase = false;
 					}
+
 					break;
 
 				case "/secretmessage":
@@ -163,7 +163,8 @@ public class EchoServer{
 			}
 		}
 	}
-	public static void closeServer(PrintWriter output, BufferedReader input, Socket link, ServerSocket serverSock) throws IOException {
+	public static void closeServer(PrintWriter output, BufferedReader input, Socket link, ServerSocket serverSock)
+			throws IOException {
 		System.out.println("[CLIENT REQUESTED TO CLOSE SERVER!");
 		output.close();
 		input.close();
@@ -171,7 +172,8 @@ public class EchoServer{
 		serverSock.close();
 	}
 
-	public static void disconnectClient(PrintWriter output, BufferedReader input, Socket link, ServerSocket serverSock) throws IOException, InterruptedException {
+	public static void disconnectClient(PrintWriter output, BufferedReader input, Socket link, ServerSocket serverSock)
+			throws IOException, InterruptedException {
 		output.println("[CLIENT REQUESTED TO CLOSE CONNECTION!");
 		TimeUnit.SECONDS.sleep(5);
 		output.println("[DISCONNECTING!");

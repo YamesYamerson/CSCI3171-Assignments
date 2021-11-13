@@ -37,47 +37,76 @@ public class EchoClient{
 				"/exit, /quit, /disconnect ---- allows you to disconnect from the server\n\n" +
 				"Enter a message:");
 
-		//User Input
-		while ((usrInput = stdIn.readLine())!=null){
-			String currentInput = usrInput;
+		//Initializes CaesarCipher variable and object
+		boolean cipherActive = false;
+		String serverKeyMessage;
+		int serverKey;
+		CaesarCipher caesarCipher = new CaesarCipher();
+		//Checks for user input
+		while ((usrInput = stdIn.readLine())!=null) {
 			output.println(usrInput);
 			String message = input.readLine();
-			System.out.println("echo: " + message);
-			output.flush();
+			if (usrInput.equalsIgnoreCase("/caesarcipher")) {
+				serverKeyMessage = message;
+				int tempServerKey = Integer.parseInt(serverKeyMessage.replaceAll("[^0-9]", ""));
+				serverKey = tempServerKey;
+				cipherActive = true;
+				if (cipherActive) {
+					while ((usrInput = stdIn.readLine()) != null) {
+						message = usrInput;
+						if (usrInput.equalsIgnoreCase("/caesarcipher")) {
+							System.out.println(input.readLine());
+						} else if (usrInput.equalsIgnoreCase("/bye")
+								|| usrInput.equalsIgnoreCase("bye")) {
+							break;
+						}
+						//Encrypts message to send to server
 
-			switch(currentInput) {
-				case "echo: Enter Website URL:":
-				case "iplookup terminating...":
-				case "Would you like to play the number game (Y/N)?":
-				case "You have guessed correctly! Game ending!":
-				case "echo: Enter a message to encrypt: ":
-					output.flush();
+						//Prints server response to client
+						if (!message.equalsIgnoreCase("/caesarcipher")) {
+							String currentMessage = usrInput;
+							String encryptedMessage = caesarCipher.encrypt(currentMessage, serverKey);
+							output.println(encryptedMessage);
+							System.out.println("echo: " + message);
 
-				case "/caesarcipher":
-						CaesarCipher caesarCipher = new CaesarCipher();
-						String serverKeyMessage = message;
-						int serverKey = Integer.parseInt(serverKeyMessage.replaceAll("[^0-9]", ""));
-						String currentMessage = usrInput;
-						String encryptedMessage = caesarCipher.encrypt(currentMessage, serverKey);
-						output.println(encryptedMessage);
-						output.flush();
-						break;
-
-				case "echo: /quit":
-				case "echo: /disconnect":
-				case "echo: /killserver":
-					output.close();
-					input.close();
-					stdIn.close();
-					link.close();
+						}
+					}
 					break;
+				}
+
 			}
-			//Flushes output for number game
-			if(isNumeric(currentInput)){
+
+			if (!cipherActive) {
+				String echo = input.readLine();
+				System.out.println("echo: " + echo);
 				output.flush();
 			}
 		}
+
+		switch(usrInput) {
+//			case "echo: Enter Website URL:":
+//			case "iplookup terminating...":
+//			case "Would you like to play the number game (Y/N)?":
+//			case "You have guessed correctly! Game ending!":
+//			case "echo: Enter a message to encrypt: ":
+//				output.flush();
+
+			case "echo: /quit":
+			case "echo: /disconnect":
+			case "echo: /killserver":
+				output.close();
+				input.close();
+				stdIn.close();
+				link.close();
+				break;
+		}
+		//Flushes output for number game
+		if(isNumeric(usrInput)){
+			output.flush();
+		}
 	}
+	//Checks string for numerical values and returns true if all numeric, false if other characters are present
+
 	public static boolean isNumeric(String str) {
 		for (char c : str.toCharArray()){
 			if(!Character.isDigit(c)) return false;
