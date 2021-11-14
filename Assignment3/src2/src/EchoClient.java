@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.regex.Pattern;
 
 public class EchoClient{
-	public static void main(String[] args) throws IOException{
+	public static void run() throws IOException{
 		Socket link = null;
 		PrintWriter output = null;
 		BufferedReader input = null;
