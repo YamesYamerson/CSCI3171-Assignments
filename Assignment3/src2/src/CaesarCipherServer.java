@@ -1,15 +1,26 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.Scanner;
+import java.net.*;
+
+
 public class CaesarCipherServer {
     //Main method to run server program
     public static void main(String[] args) {
-
+    //Initializes EchoServer and EchoClient Objects
+    EchoServer echoServer = new EchoServer();
+    EchoClient echoClient = new EchoClient();
+    //Runs server program
+    echoServer.run();
+    echoClient.run();
     }
+
     //EchoServer Class
-    import java.net.*;
-import java.io.*;
-import java.util.concurrent.TimeUnit;
-
     public class EchoServer{
-
         public static void run() throws Exception {
             //Initializes and attempts to connect server
             ServerSocket serverSock = null;
@@ -55,20 +66,23 @@ import java.util.concurrent.TimeUnit;
                         output.println("Enter Website URL:");
                         inputLine = input.readLine();
                         System.out.println("Server: " + inputLine);
-//  TO DO:          if(validator.isValid(inputLine)) {                    //Regex to validate user input
+//  TO DO:              if(validator.isValid(inputLine)) {                    //Regex to validate user input
                         String ipAddress = ipFinder.find(inputLine) + " ==>  [IPLOOKUP TERMINATING]";
                         System.out.println(ipAddress);
                         output.println(ipAddress);
                         System.out.println("[IPLOOKUP FUNCTION TERMINATING!]");
                         break;
 
-                    case "/numbergame":                                         //Starts a number guessing game
+                    case "/numbergame":                                       //Starts a number guessing game
+                        //Variable initialization
                         boolean isPlaying;
                         int randomNumber = -1;
                         final int maxNum = 100;
+                        //Game start message output
                         System.out.println("[CLIENT HAS INITIATED GUESS THE NUMBER GAME!]");
                         output.println("Would you like to play the number game (Y/N)?");
                         inputLine = input.readLine();
+                        //Conditions for game start based on user input
                         if(inputLine.equalsIgnoreCase("Y")){
                             System.out.println("[CLIENT REQUESTS TO BEGIN A GAME!]");
                             isPlaying = true;
@@ -86,6 +100,7 @@ import java.util.concurrent.TimeUnit;
                             isPlaying = false;
                         }
 
+                        //Game state loop
                         while(isPlaying) {
                             System.out.println("[REQUESTING NUMBER FROM CLIENT!]");
                             inputLine = input.readLine();
@@ -147,7 +162,6 @@ import java.util.concurrent.TimeUnit;
                                         decryptedMessage);
                             }
                         }
-
                         break;
 
                     case "/secretmessage":
@@ -155,7 +169,7 @@ import java.util.concurrent.TimeUnit;
                         output.println("♡♡♡♡♡♡ Shahnaz ♡♡♡♡♡♡");
                         break;
 
-                    case "/killserver":
+                    case "/killserver":                                                 //Closes server
                         System.out.println("[CLIENT REQUESTED SERVER SHUTDOWN!]");
                         TimeUnit.SECONDS.sleep(1);
                         System.out.println("[SERVER IS SHUTTING DOWN!");
@@ -164,7 +178,7 @@ import java.util.concurrent.TimeUnit;
                         System.exit(1);
                         break;
 
-                    case "exit":
+                    case "exit":                                                       //Disconnects client
                     case "quit":
                     case "disconnect":
                         disconnectClient(output, input, link, serverSock);
@@ -174,6 +188,7 @@ import java.util.concurrent.TimeUnit;
                 }
             }
         }
+        //Method to close server from client end
         public static void closeServer(PrintWriter output, BufferedReader input, Socket link, ServerSocket serverSock)
                 throws IOException {
             System.out.println("[CLIENT REQUESTED TO CLOSE SERVER!");
@@ -183,6 +198,7 @@ import java.util.concurrent.TimeUnit;
             serverSock.close();
         }
 
+        //Method to disconnect client from server
         public static void disconnectClient(PrintWriter output, BufferedReader input, Socket link, ServerSocket serverSock)
                 throws IOException, InterruptedException {
             output.println("[CLIENT REQUESTED TO CLOSE CONNECTION!");
@@ -201,18 +217,17 @@ import java.util.concurrent.TimeUnit;
             return true;
         }
     }
-    //EchoClient Class
-    import java.io.*;
-import java.net.*;
-import java.util.regex.Pattern;
 
+    //EchoClient Class
     public class EchoClient{
         public static void run() throws IOException{
+            //Variable assignment
             Socket link = null;
             PrintWriter output = null;
             BufferedReader input = null;
             String message;
 
+            //Attempts to connect client to server
             try{
                 System.out.println("[CONNECTING TO SERVER ON PORT 8000]");
                 link = new Socket(InetAddress.getLocalHost(), 8000);
@@ -220,19 +235,22 @@ import java.util.regex.Pattern;
                 input = new BufferedReader(new InputStreamReader(link.getInputStream()));
                 System.out.println("[CONNECTED TO SERVER]");
             }
+            //Disconnects if bad host is encountered
             catch(UnknownHostException e)
             {
                 System.out.println("Unknown Host");
                 System.exit(1);
             }
+            //Disconnects if connection is unable to be established
             catch (IOException e){
                 System.out.println("Cannot connect to host");
                 System.exit(1);
             }
-
+            //Initializes client side input
             BufferedReader stdIn = new BufferedReader((new InputStreamReader(System.in)));
             String usrInput;
 
+            //Provides client with list of server options
             System.out.println("Welcome to the Server!\n\n" +
                     "----- Here is a List Options: ----- \n " +
                     "/myip ----- will allow you to look up your ip address\n" +
@@ -248,35 +266,40 @@ import java.util.regex.Pattern;
                 output.println(usrInput);
                 message = input.readLine();
 
-                if(usrInput.equalsIgnoreCase("/caesarcipher")){
-                    cipherActive = true;
-                }
-
-                if(!cipherActive){
+                //Check to run server in normal mode
+                if{(!cipherActive) {
                     System.out.println("echo: " + message);
-                    output.flush();
-                }
+
+                //Activates CaesarCipher mode
+                }else if(usrInput.equalsIgnoreCase("/caesarcipher")){
+                    cipherActive = true;
+
+                //Routine if CaesarCipher mode is active
                 if(cipherActive) {
                     CaesarCipher caesarCipher = new CaesarCipher();
-                    String serverKeyMessage = message;
-//				int serverKey;
+
+//TO DO:		int serverKey;
 //				java.util.regex.Matcher m = Pattern.compile(".*([0-9]+).*").matcher(serverKeyMessage);
 //				if (m.matches()) serverKey = Integer.parseInt(m.group(1));
 //				else serverKey = 0;
+
+                    //Sets the server key from server key message
+                    String serverKeyMessage = message;
                     int serverKey = Integer.parseInt(serverKeyMessage.replaceAll("[^0-9]", ""));
                     System.out.println(serverKeyMessage);
 
+                    //Operations loop while CaesarCipher loop is active
                     while ((usrInput = stdIn.readLine()) != null) {
                         message = usrInput;
                         if (usrInput.equalsIgnoreCase("/caesarcipher")){
-                            output.flush();
+
+                        //Exit condition for CaesarCipher mode (Disconnects Server)
                         }else if (usrInput.equalsIgnoreCase("/bye")
                                 || usrInput.equalsIgnoreCase("bye")) {
                             cipherActive = false;
                         }
-                        //Encrypts message to send to server
 
-                        //Prints server response to client
+                        //Sends server encrypted CaesarCipher message
                         if (!message.equalsIgnoreCase("/caesarcipher")) {
                             String currentMessage = usrInput;
                             String encryptedMessage = caesarCipher.encrypt(currentMessage, serverKey);
@@ -285,14 +308,15 @@ import java.util.regex.Pattern;
                         }
                     }
                 }
+
+                //Switch conditions for message inputs
                 switch(message) {
-                    case "/quit":
+                    case "/quit":                                               //Disconnects server and client
                     case "/disconnect":
                     case "/killserver":
                     case "bye":
                     case "/bye":
                         System.out.println("Disconnecting from server...");
-
                         output.close();
                         input.close();
                         stdIn.close();
@@ -307,8 +331,8 @@ import java.util.regex.Pattern;
                 output.flush();
             }
         }
-        //Checks string for numerical values and returns true if all numeric, false if other characters are present
 
+        //Checks string for numerical values and returns true if all numeric, false if other characters are present
         public static boolean isNumeric(String str) {
             for (char c : str.toCharArray()){
                 if(!Character.isDigit(c)) return false;
@@ -316,6 +340,7 @@ import java.util.regex.Pattern;
             return true;
         }
     }
+
     //MyLocalIPAddress Class
     import java.net.*;
     import java.util.Scanner;
@@ -334,8 +359,6 @@ import java.util.regex.Pattern;
     }
 
     //IPFinder Class
-    import java.net.*;
-    import java.util.Scanner;
         public class IPFinder{
             public static String find(String host) throws Exception{
                 try
@@ -351,9 +374,7 @@ import java.util.regex.Pattern;
         }
 
     //NumberGame Class
-    import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+
 
     public class NumberGame {
         BufferedReader input;
@@ -367,24 +388,24 @@ import java.io.PrintWriter;
             System.out.println("[CLIENT HAS INITIATED GUESS THE NUMBER GAME!]");
             output.println("Would you like to play the number game (Y/N)?");
             inputLine = input.readLine();
-            if (inputLine.equalsIgnoreCase("Y")) {
+            if(inputLine.equalsIgnoreCase("Y")){
                 System.out.println("[CLIENT REQUESTS TO BEGIN A GAME!]");
                 isPlaying = true;
                 System.out.println("[SERVER IS PICKING A RANDOM NUMBER!]");
                 output.println("Enter A Number Between 0-100 (/endgame to quit)");
                 randomNumber = (int) Math.floor(Math.random() * maxNum + 1);
                 System.out.println("[RANDOM NUMBER IS: " + randomNumber + "]");
-            } else if (inputLine.equalsIgnoreCase("N")) {
+            }else if(inputLine.equalsIgnoreCase("N")){
                 System.out.println("[GUESS THE NUMBER GAME ABORTING]");
                 output.println("Quitting guess the number game");
                 isPlaying = false;
-            } else {
+            }else{
                 System.out.println("[CLIENT PROVIDED FAULTY INPUT, GAME ABORTING!]");
                 output.println("Input not recognized, game aborting!");
                 isPlaying = false;
             }
 
-            while (isPlaying) {
+            while(isPlaying) {
                 System.out.println("[REQUESTING NUMBER FROM CLIENT!]");
                 inputLine = input.readLine();
                 if (inputLine.equalsIgnoreCase("/endgame")) {
@@ -396,34 +417,118 @@ import java.io.PrintWriter;
                         System.out.println("[CLIENT HAS GUESSED THE CORRECT NUMBER, GAME TERMINATING!]");
                         output.println("You have guessed correctly! Game ending!");
                         isPlaying = false;
-                    }else if(currentGuess > randomNumber) {
+                    } else if (currentGuess > randomNumber) {
                         System.out.println("[CLIENT GUESSED TOO HIGH!]");
-                        output.println("Too high! Guess again!");
-                    }else if(currentGuess < randomNumber) {
+                        output.println("Too high! Guess again! (/endgame to quit)");
+                    } else if (currentGuess < randomNumber) {
                         System.out.println("[CLIENT GUESSED TOO LOW!]");
-                        output.println("Too low! Guess again!");
+                        output.println("Too low! Guess again! (/endgame to quit)");
                     }
-                }else if(inputLine.equalsIgnoreCase("/endgame")) {
+                }else if(inputLine.equalsIgnoreCase("/endgame")){
                     System.out.println("[CLIENT HAS REQUESTED TO END GAME - TERMINATING...]");
                     output.println("Quitting game, better luck next time!");
                     break;
 
                 }else{
                     System.out.println("[CLIENT HAS PROVIDED INCORRECT INPUT]");
-                    output.println("You have not entered a valid number, try again!");
+                    output.println("You have not entered a valid number, try again! (/endgame to quit)");
                 }
             }
         }
-        public static boolean isNumeric(String str){
-            for (char c : str.toCharArray()) {
-                if(!Character.isDigit(c)) return false;
+    //CaesarCipher Class
+    public class CaesarCipher {
+        public static String encrypt(String stringToEncrypt, int offset) {
+            String ciphertext = "";
+            char alphabet;
+            for(int i=0; i < stringToEncrypt.length();i++)
+            {
+                // Shift one character at a time
+                alphabet = stringToEncrypt.charAt(i);
+
+                // if alphabet lies between a and z
+                if(alphabet >= 'a' && alphabet <= 'z')
+                {
+                    // shift alphabet
+                    alphabet = (char) (alphabet + offset);
+                    // if shift alphabet greater than 'z'
+                    if(alphabet > 'z') {
+                        // reshift to starting position
+                        alphabet = (char) (alphabet+'a'-'z'-1);
+                    }
+                    ciphertext = ciphertext + alphabet;
+                }
+
+                //Alphabet is between 'A' and 'Z'
+                else if(alphabet >= 'A' && alphabet <= 'Z') {
+                    //Offset alphabet
+                    alphabet = (char) (alphabet + offset);
+                    // Offset alphabet greater than 'Z'
+                    if(alphabet > 'Z') {
+                        //reshift to starting position
+                        alphabet = (char) (alphabet+'A'-'Z'-1);
+                    }
+                    ciphertext = ciphertext + alphabet;
+                }
+                else {
+                    ciphertext = ciphertext + alphabet;
+                }
             }
-            return true;
+            return(ciphertext);
+
+        }
+        public static String decrypt(String stringToEncrypt, int offset) {
+            int decryptKey = 26 - offset;
+            String ciphertext = "";
+            char alphabet;
+            for(int i=0; i < stringToEncrypt.length();i++)
+            {
+                // Shift one character at a time
+                alphabet = stringToEncrypt.charAt(i);
+
+                // if alphabet lies between a and z
+                if(alphabet >= 'a' && alphabet <= 'z')
+                {
+                    // shift alphabet
+                    alphabet = (char) (alphabet + decryptKey);
+                    // if shift alphabet greater than 'z'
+                    if(alphabet > 'z') {
+                        // reshift to starting position
+                        alphabet = (char) (alphabet+'a'-'z'-1);
+                    }
+                    ciphertext = ciphertext + alphabet;
+                }
+
+                // if alphabet lies between 'A'and 'Z'
+                else if(alphabet >= 'A' && alphabet <= 'Z') {
+                    // shift alphabet
+                    alphabet = (char) (alphabet + decryptKey);
+
+                    // if shift alphabet greater than 'Z'
+                    if(alphabet > 'Z') {
+                        //reshift to starting position
+                        alphabet = (char) (alphabet+'A'-'Z'-1);
+                    }
+                    ciphertext = ciphertext + alphabet;
+                }
+                else {
+                    ciphertext = ciphertext + alphabet;
+                }
+            }
+            return(ciphertext);
         }
     }
-    //CaesarCipher Class
 
     //UrlValidator Class
 
-
-}
+        public class UrlValidator {
+            public static boolean isValid(String urlToValidate) {
+                String regexPattern = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+                Pattern p = Pattern.compile(regexPattern);
+                if (urlToValidate == null) {
+                    return false;
+                }
+                Matcher m = p.matcher(urlToValidate);
+                return m.matches();
+            }
+        }
+    }
