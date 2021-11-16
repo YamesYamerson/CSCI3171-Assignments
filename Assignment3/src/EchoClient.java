@@ -1,9 +1,9 @@
 import java.io.*;
 import java.net.*;
-import java.util.regex.Pattern;
+import java.util.concurrent.TimeUnit;
 
 public class EchoClient{
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException, InterruptedException {
 		Socket link = null;
 		PrintWriter output = null;
 		BufferedReader input = null;
@@ -68,7 +68,22 @@ public class EchoClient{
 						output.flush();
 					}else if (usrInput.equalsIgnoreCase("/bye")
 							|| usrInput.equalsIgnoreCase("bye")) {
+						output.println(usrInput);
 						cipherActive = false;
+						System.out.println("You are disconnecting from server in:");
+						TimeUnit.SECONDS.sleep(1);
+						System.out.println("3");
+						TimeUnit.SECONDS.sleep(1);
+						System.out.println("2");
+						TimeUnit.SECONDS.sleep(1);
+						System.out.println("1");
+						System.out.println("Disconnecting from server...");
+
+						output.close();
+						input.close();
+						stdIn.close();
+						link.close();
+						System.exit(1);
 					}
 					//Encrypts message to send to server
 
@@ -81,7 +96,7 @@ public class EchoClient{
 					}
 				}
 			}
-			switch(message) {
+			switch(usrInput) {
 				case "/quit":
 				case "/disconnect":
 				case "/killserver":

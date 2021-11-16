@@ -1,83 +1,63 @@
-import com.sun.org.apache.bcel.internal.generic.ARETURN;
-
-import java.util.*;
-
 public class CaesarCipher {
     public static String encrypt(String stringToEncrypt, int offset) {
         String ciphertext = "";
-        char alphabet;
+        char cipherChars;
         for(int i=0; i < stringToEncrypt.length();i++)
         {
-            // Shift one character at a time
-            alphabet = stringToEncrypt.charAt(i);
-
-            // if alphabet lies between a and z
-            if(alphabet >= 'a' && alphabet <= 'z')
+            // CipherChar is between a-z
+            cipherChars = stringToEncrypt.charAt(i);
+            if(cipherChars >= 'a' && cipherChars <= 'z')
             {
-                // shift alphabet
-                alphabet = (char) (alphabet + offset);
-                // if shift alphabet greater than 'z'
-                if(alphabet > 'z') {
-                    // reshift to starting position
-                    alphabet = (char) (alphabet+'a'-'z'-1);
+                //Offset cipherChars
+                cipherChars = (char) (cipherChars + offset);
+                if(cipherChars > 'z') {
+                    cipherChars = (char) (cipherChars+'a'-'z'-1); //reset to initial position
                 }
-                ciphertext = ciphertext + alphabet;
+                ciphertext = ciphertext + cipherChars;
             }
 
-            //Alphabet is between 'A' and 'Z'
-            else if(alphabet >= 'A' && alphabet <= 'Z') {
-                //Offset alphabet
-                alphabet = (char) (alphabet + offset);
-                // Offset alphabet greater than 'Z'
-                if(alphabet > 'Z') {
-                    //reshift to starting position
-                    alphabet = (char) (alphabet+'A'-'Z'-1);
+            //CipherChar is between A-Z
+            else if(cipherChars >= 'A' && cipherChars <= 'Z') {
+                cipherChars = (char) (cipherChars + offset);
+                if(cipherChars > 'Z') {
+                    cipherChars = (char) (cipherChars+'A'-'Z'-1);  //reset to initial position
                 }
-                ciphertext = ciphertext + alphabet;
+                ciphertext = ciphertext + cipherChars;
             }
             else {
-                ciphertext = ciphertext + alphabet;
+                ciphertext = ciphertext + cipherChars;
             }
         }
         return(ciphertext);
-
     }
     public static String decrypt(String stringToEncrypt, int offset) {
         int decryptKey = 26 - offset;
         String ciphertext = "";
-        char alphabet;
+        char cipherChars;
         for(int i=0; i < stringToEncrypt.length();i++)
         {
-            // Shift one character at a time
-            alphabet = stringToEncrypt.charAt(i);
-
-            // if alphabet lies between a and z
-            if(alphabet >= 'a' && alphabet <= 'z')
+            // Offsets between a-z
+            cipherChars = stringToEncrypt.charAt(i);
+            if(cipherChars >= 'a' && cipherChars <= 'z')
             {
-                // shift alphabet
-                alphabet = (char) (alphabet + decryptKey);
-                // if shift alphabet greater than 'z'
-                if(alphabet > 'z') {
-                    // reshift to starting position
-                    alphabet = (char) (alphabet+'a'-'z'-1);
+                //Offset cipherChars
+                cipherChars = (char) (cipherChars + decryptKey);
+                if(cipherChars > 'z') {
+                    cipherChars = (char) (cipherChars+'a'-'z'-1); //reset to initial position
                 }
-                ciphertext = ciphertext + alphabet;
+                ciphertext = ciphertext + cipherChars;
             }
 
-            // if alphabet lies between 'A'and 'Z'
-            else if(alphabet >= 'A' && alphabet <= 'Z') {
-                // shift alphabet
-                alphabet = (char) (alphabet + decryptKey);
-
-                // if shift alphabet greater than 'Z'
-                if(alphabet > 'Z') {
-                    //reshift to starting position
-                    alphabet = (char) (alphabet+'A'-'Z'-1);
+            //Offsets between A-Z
+            else if(cipherChars >= 'A' && cipherChars <= 'Z') {
+                cipherChars = (char) (cipherChars + decryptKey);
+                if(cipherChars > 'Z') {
+                    cipherChars = (char) (cipherChars+'A'-'Z'-1);  //reset to initial position
                 }
-                ciphertext = ciphertext + alphabet;
+                ciphertext = ciphertext + cipherChars;
             }
             else {
-                ciphertext = ciphertext + alphabet;
+                ciphertext = ciphertext + cipherChars;
             }
         }
         return(ciphertext);

@@ -127,7 +127,15 @@ public class EchoServer{
 								inputLine.equalsIgnoreCase("bye")) {
 							System.out.println("[CLIENT HAS REQUESTED TO END CAESAR CIPHER MODE!]");
 							output.println("Quitting Caesar cipher mode...");
-							break;
+							System.out.println("[DISCONNECTING IN:] ");
+							TimeUnit.SECONDS.sleep(1);
+							System.out.println("3");
+							TimeUnit.SECONDS.sleep(1);
+							System.out.println("2");
+							TimeUnit.SECONDS.sleep(1);
+							System.out.println("1");
+							System.out.println("[SERVER DISCONNECTED!]");
+							System.exit(1);
 						}else{
 							CaesarCipher caesarCipher = new CaesarCipher();
 							currentMessage = inputLine;
@@ -145,8 +153,8 @@ public class EchoServer{
 					break;
 
 				case "/secretmessage":
-					System.out.println("♡♡♡♡♡♡ Shahnaz ♡♡♡♡♡♡");
-					output.println("♡♡♡♡♡♡ Shahnaz ♡♡♡♡♡♡");
+					System.out.println("...it's a secret...");
+					output.println("...it's a secret...");
 					break;
 
 				case "/killserver":
@@ -194,4 +202,5 @@ public class EchoServer{
 		}
 		return true;
 	}
+
 }
