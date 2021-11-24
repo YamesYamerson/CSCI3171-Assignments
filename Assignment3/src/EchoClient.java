@@ -69,7 +69,9 @@ public class EchoClient{
 					}else if (usrInput.equalsIgnoreCase("/bye")
 							|| usrInput.equalsIgnoreCase("bye")) {
 						output.println(usrInput);
+						//Caesar Cipher Active deactivated
 						cipherActive = false;
+
 						System.out.println("You are disconnecting from server in:");
 						TimeUnit.SECONDS.sleep(1);
 						System.out.println("3");
