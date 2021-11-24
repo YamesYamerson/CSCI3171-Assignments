@@ -19,13 +19,27 @@ public class MultiEchoClient{
 			out = new PrintWriter(link.getOutputStream(), true);
 			kbd = new BufferedReader(new InputStreamReader(System.in));
 			String message, response;
-			do{
-				System.out.println("Enter message (BYE to quit)");
-				message = kbd.readLine();
-				out.println(message);
-				response = in.readLine();
-				System.out.println(response);
-			}while (!message.equals("BYE"));
+
+			//Checks to see if client has just logged in and asks for username
+			boolean login = true;
+			if (login) {
+					System.out.println("Enter your username (BYE to quit)");
+					message = kbd.readLine();
+					out.println(message);
+					response = in.readLine();
+					System.out.println(response);
+					
+					//Default conditions if client is not connecting to server
+				}else{
+					System.out.println("Enter message (BYE to quit)");
+					message = kbd.readLine();
+					out.println(message);
+					response = in.readLine();
+					System.out.println(response);
+			}
+
+
+			while (!message.equals("BYE"));
 		}
 		catch(UnknownHostException e){System.exit(1);}
 		catch(IOException e){System.exit(1);}

@@ -9,57 +9,58 @@ import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ClientHandler extends Thread{
+public class ClientHandler extends Thread {
 	private Socket client;
 	private BufferedReader in;
 	private PrintWriter out;
 	private MultiEchoServer chatroomServer;
 
 	//Constructor for ClientHandler
-	public ClientHandler(Socket socket, MultiEchoServer chatroomServer){
+	public ClientHandler(Socket socket, MultiEchoServer chatroomServer) throws IOException {
 		this.client = socket;
 		this.chatroomServer = chatroomServer;
+	}
+	//Initializes input and output
+	public void run() {
 
-		//Initializes input and output
-		try{
+		//Connects client reader amd writer
+		try {
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			out = new PrintWriter(client.getOutputStream(), true);
 
-			//Creates and sets username for client
+			//Creates and sets username for client from user input
+
 			String userName = in.readLine();
 			String userConnectMessage = "[" + userName + "IS CONNECTED SO SERVER]";
-			chatroomServer.broadcastMessage(userConnectMessage, this);
-		}
-		
-		catch(IOException e){
+			System.out.println(userConnectMessage);
+			out.println(userConnectMessage);
+
+		} catch (IOException e) {
 			e.printStackTrace();
+
 		}
-	}
-	public void run(){
-		try{
+		try {
 			String received;
-			do{
+			do {
 				received = in.readLine();
 				out.println("ECHO: " + received);
 				System.out.println("TESTLINE1: " + received);
 			} while (!received.equals("BYE"));
-		}
-		catch(IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		finally{
-			try{
-				if(client!=null){
+		} finally {
+			try {
+				if (client != null) {
 					System.out.println("Closing connection");
 					client.close();
 				}
-			}
-			catch(IOException e){
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-	}//end run
+	}
 
+	//Sends message to server using writer
 	void sendMessage(String message){
 		out.println(message);
 	}

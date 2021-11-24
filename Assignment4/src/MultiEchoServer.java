@@ -8,8 +8,10 @@ public class MultiEchoServer{
 
 	//declare the ServerSocket variable and the port number for the server(constant)
 	private static int port;
+	private static MultiEchoServer chatroomServer = new MultiEchoServer(1234);;
 	private Set<String> usersNames = new HashSet<>();
 	private Set<ClientHandler> clientThreads = new HashSet<>();
+
 
 	public MultiEchoServer(int port){
 		this.port = port;
@@ -26,7 +28,7 @@ public class MultiEchoServer{
 			while (true) {
 				Socket socket = serverSock.accept();
 				System.out.println("[USER CONNECTED AT: " + socket + " ]");
-				ClientHandler newClient = new ClientHandler(socket);
+				ClientHandler newClient = new ClientHandler(socket, chatroomServer);
 				clientThreads.add(newClient);
 				newClient.run();
 				do {
@@ -35,7 +37,7 @@ public class MultiEchoServer{
 					try {
 						client = serverSock.accept();
 						System.out.println("[SERVER ACCEPTED NEW CLIENT " + client.toString() + "]");
-						ClientHandler handler = new ClientHandler(client);
+						ClientHandler handler = new ClientHandler(client, chatroomServer);
 						handler.start();
 					} catch (IOException e) {
 						System.out.println("[SERVER FAILED TO ACCEPT CLIENT");
@@ -58,7 +60,6 @@ public class MultiEchoServer{
 	//from multiple clients
 	public static void main(String[] args) throws IOException {
 		int port = 1234;
-		MultiEchoServer chatroomServer = new MultiEchoServer(1234);
 		chatroomServer.run();
 	}
 
