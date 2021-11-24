@@ -12,7 +12,7 @@ public class MultiEchoClient{
 	private static PrintWriter out;
 	private static BufferedReader kbd;
 
-	public static void main(String[] args) throws Exception{
+	public static void run() throws Exception{
 		try{
 			link = new Socket("127.0.0.1", PORT);
 			in = new BufferedReader(new InputStreamReader(link.getInputStream()));
@@ -29,6 +29,8 @@ public class MultiEchoClient{
 		}
 		catch(UnknownHostException e){System.exit(1);}
 		catch(IOException e){System.exit(1);}
+
+		//Checks link and closes it if it is null
 		finally{
 			try{
 				if (link!=null){
@@ -39,6 +41,11 @@ public class MultiEchoClient{
 			catch(IOException e){System.exit(1);}
 		}
 	}//end main
+
+	public static void main(String[] args) throws Exception {
+		MultiEchoClient newClient= new MultiEchoClient();
+		newClient.run();
+	}
 }//end class MultiEchoClient
 	
 	
