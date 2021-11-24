@@ -32,7 +32,7 @@ public class ClientHandler extends Thread{
 			do{
 				received = in.readLine();
 				out.println("ECHO: " + received);
-				System.out.println(received);
+				System.out.println("TESTLINE1: " + received);
 			} while (!received.equals("BYE"));
 		}
 		catch(IOException e){
@@ -50,4 +50,8 @@ public class ClientHandler extends Thread{
 			}
 		}
 	}//end run
+
+	void sendMessage(String message){
+		out.println(message);
+	}
 }//end ClientHandler class

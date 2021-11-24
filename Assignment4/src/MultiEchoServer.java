@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MultiEchoServer{
+
 	//declare the ServerSocket variable and the port number for the server(constant)
 	private static int port;
 	private Set<String> usersNames = new HashSet<>();
@@ -14,13 +15,17 @@ public class MultiEchoServer{
 		this.port = port;
 	}
 
+	//Method that starts server and accepts clients. Server disconnects under error conditions.
 	public void run() throws IOException {
-		try (ServerSocket serverSock = new ServerSocket(port)) {
-			System.out.println("[SERVER LISTENING ON PORT: " + port + "]");
 
+		//Initializes server on designated port 1234
+		try (ServerSocket serverSock = new ServerSocket(port)) {
+			System.out.println("[SERVER LISTENING ON PORT " + port + "]");
+
+			//Loop that detects clients, connects them, and allows them to send and receive messages
 			while (true) {
 				Socket socket = serverSock.accept();
-				System.out.println("[USER CONNECTED AT: " + socket + "]");
+				System.out.println("[USER CONNECTED AT: " + socket + " ]");
 				ClientHandler newClient = new ClientHandler(socket);
 				clientThreads.add(newClient);
 				newClient.run();
@@ -29,25 +34,24 @@ public class MultiEchoServer{
 					System.out.println("Listening for connection ...");
 					try {
 						client = serverSock.accept();
-						System.out.println("[SERVER ACCEPTED NEW CLIENT " + client + "]");
+						System.out.println("[SERVER ACCEPTED NEW CLIENT " + client.toString() + "]");
 						ClientHandler handler = new ClientHandler(client);
 						handler.start();
 					} catch (IOException e) {
-						System.out.println("Accept failed");
+						System.out.println("[SERVER FAILED TO ACCEPT CLIENT");
 						System.exit(1);
 					}
-					System.out.println("[CONNECTED ON " + port + "]");
+					System.out.println("[CONNECTED ON PORT" + port + "]");
 					System.out.println("Listening for input ...");
 				} while (true);
 			}
 
 		} catch (IOException e) {
-			System.out.println("Can't listen on " + port);
+			System.out.println("[!SERVER UNABLE TO LISTEN ON PORT " + port + "]");
 			System.exit(1);
 		}
-
 	}
-	//end main
+
 
 
 	//The main method will create the ServerSocket object and listens to inputs
@@ -56,7 +60,22 @@ public class MultiEchoServer{
 		int port = 1234;
 		MultiEchoServer chatroomServer = new MultiEchoServer(1234);
 		chatroomServer.run();
+	}
 
+	void addUser(String username){
+		usersNames.add(username);
+	}
+
+	Set<String> getUsersNames(){
+		return usersNames;
+	}
+
+	void broadcastMessage(String message, ClientHandler activeClient){
+		for(ClientHandler client: clientThreads){
+			if(client != activeClient){
+				client.sendMessage(message);
+			}
+		}
 	}
 
 }//end class MultiEchoServer
