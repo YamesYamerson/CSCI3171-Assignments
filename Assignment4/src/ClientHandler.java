@@ -13,15 +13,24 @@ public class ClientHandler extends Thread{
 	private Socket client;
 	private BufferedReader in;
 	private PrintWriter out;
+	private MultiEchoServer chatroomServer;
 
+	//Constructor for ClientHandler
+	public ClientHandler(Socket socket, MultiEchoServer chatroomServer){
+		this.client = socket;
+		this.chatroomServer = chatroomServer;
 
-
-	public ClientHandler(Socket socket){
-		client = socket;
+		//Initializes input and output
 		try{
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			out = new PrintWriter(client.getOutputStream(), true);
+
+			//Creates and sets username for client
+			String userName = in.readLine();
+			String userConnectMessage = "[" + userName + "IS CONNECTED SO SERVER]";
+			chatroomServer.broadcastMessage(userConnectMessage, this);
 		}
+		
 		catch(IOException e){
 			e.printStackTrace();
 		}
