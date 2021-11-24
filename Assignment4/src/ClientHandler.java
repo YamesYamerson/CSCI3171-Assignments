@@ -14,6 +14,7 @@ public class ClientHandler extends Thread {
 	private BufferedReader in;
 	private PrintWriter out;
 	private MultiEchoServer chatroomServer;
+	private String userName;
 
 	//Constructor for ClientHandler
 	public ClientHandler(Socket socket, MultiEchoServer chatroomServer) throws IOException {
@@ -22,30 +23,32 @@ public class ClientHandler extends Thread {
 	}
 	//Initializes input and output
 	public void run() {
-
 		//Connects client reader amd writer
 		try {
+			boolean login = true;
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			out = new PrintWriter(client.getOutputStream(), true);
 
 			//Creates and sets username for client from user input
-
-			String userName = in.readLine();
-			String userConnectMessage = "[" + userName + "IS CONNECTED SO SERVER]";
-			System.out.println(userConnectMessage);
-			out.println(userConnectMessage);
-
+			if(login) {
+				String userName = in.readLine();
+				String userConnectMessage = "[NEW USER \"" + userName + "\" IS CONNECTED SO SERVER]";
+				System.out.println(userConnectMessage);
+				out.println(userConnectMessage);
+				login = false;
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
-
 		}
+
+		//Relays and prints message information to server
 		try {
-			String received;
+			String message;
 			do {
-				received = in.readLine();
-				out.println("ECHO: " + received);
-				System.out.println("TESTLINE1: " + received);
-			} while (!received.equals("BYE"));
+				message = in.readLine();
+				out.println( client.getInputStream() + message);
+				System.out.println("TESTLINE1: " + message);
+			} while (!message.equals("BYE"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

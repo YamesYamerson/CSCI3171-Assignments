@@ -11,6 +11,7 @@ public class MultiEchoClient{
 	private static BufferedReader in;
 	private static PrintWriter out;
 	private static BufferedReader kbd;
+	String userName;
 
 	public static void run() throws Exception{
 		try{
@@ -23,20 +24,19 @@ public class MultiEchoClient{
 			//Checks to see if client has just logged in and asks for username
 			boolean login = true;
 			if (login) {
-					System.out.println("Enter your username (BYE to quit)");
-					message = kbd.readLine();
-					out.println(message);
-					response = in.readLine();
-					System.out.println(response);
-					
-					//Default conditions if client is not connecting to server
-				}else{
-					System.out.println("Enter message (BYE to quit)");
-					message = kbd.readLine();
-					out.println(message);
-					response = in.readLine();
-					System.out.println(response);
+				System.out.println("Enter your username (BYE to quit)");
+				message = kbd.readLine();
+				out.println(message);
+				response = in.readLine();
+				System.out.println(response);
+
 			}
+			//Default conditions if client is not connecting to server
+			System.out.println("Enter message (BYE to quit)");
+			message = kbd.readLine();
+			out.println(message);
+			response = in.readLine();
+			System.out.println(response);
 
 
 			while (!message.equals("BYE"));
@@ -54,6 +54,7 @@ public class MultiEchoClient{
 			}
 			catch(IOException e){System.exit(1);}
 		}
+
 	}//end main
 
 	public static void main(String[] args) throws Exception {
