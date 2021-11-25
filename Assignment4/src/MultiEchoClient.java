@@ -64,9 +64,10 @@ public class MultiEchoClient{
 	}//end run() method
 
 	public static void main(String[] args) throws Exception {
-		MultiEchoClient newClient= new MultiEchoClient();
-		newClient.run();
+		MultiEchoClient newClient1= new MultiEchoClient();
+		newClient1.run();
 	}
+
 }
 //end class MultiEchoClient
 	

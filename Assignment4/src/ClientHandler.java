@@ -32,9 +32,12 @@ public class ClientHandler extends Thread {
 			//Creates and sets username for client from user input
 			while (login) {
 				String userName = in.readLine();
-				String userConnectMessage = "[NEW USER \"" + userName + "\" IS CONNECTED SO SERVER]";
-				System.out.println(userConnectMessage);
-				out.println("You are connected as: " + userName);
+				String serverUserConnectMessage = "[NEW USER \"" + userName + "\" IS CONNECTED SO SERVER]";
+				String clientUserConnectMessage = "You are connected as: " + userName;
+				String broadcastUserConnectMessage = userName + " connected to server.";
+
+				System.out.println(serverUserConnectMessage);
+				out.println(clientUserConnectMessage);
 				login = false;
 			}
 
@@ -49,7 +52,7 @@ public class ClientHandler extends Thread {
 			try {
 
 				do {
-					message = in.readLine();  //code breaks here
+					message = in.readLine();
 					out.println(message);
 					System.out.println(message);
 				} while (!message.equals("BYE"));
