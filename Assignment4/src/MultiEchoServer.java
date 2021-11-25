@@ -59,7 +59,6 @@ public class MultiEchoServer{
 	//The main method will create the ServerSocket object and listens to inputs
 	//from multiple clients
 	public static void main(String[] args) throws IOException {
-		int port = 1234;
 		chatroomServer.run();
 	}
 

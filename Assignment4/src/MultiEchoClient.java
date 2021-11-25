@@ -37,7 +37,7 @@ public class MultiEchoClient{
 			response = in.readLine();
 			System.out.println(response);
 
-
+			//Exit conditions for server
 			while (!message.equals("BYE"));
 		}
 		catch(UnknownHostException e){System.exit(1);}

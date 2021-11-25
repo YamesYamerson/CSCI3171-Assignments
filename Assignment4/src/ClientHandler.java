@@ -23,9 +23,9 @@ public class ClientHandler extends Thread {
 	}
 	//Initializes input and output
 	public void run() {
+		boolean login = true;
 		//Connects client reader amd writer
 		try {
-			boolean login = true;
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			out = new PrintWriter(client.getOutputStream(), true);
 
@@ -35,19 +35,27 @@ public class ClientHandler extends Thread {
 				String userConnectMessage = "[NEW USER \"" + userName + "\" IS CONNECTED SO SERVER]";
 				System.out.println(userConnectMessage);
 				out.println(userConnectMessage);
-				login = false;
+
+
+			}else if(!login){
+				String message = in.readLine();
+				System.out.println(message);
+				out.println(message);
 			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		//Relays and prints message information to server
+		String message = "";
 		try {
-			String message;
+			while(!message.equalsIgnoreCase("bye"))
 			do {
-				message = in.readLine();
-				out.println( client.getInputStream() + message);
-				System.out.println("TESTLINE1: " + message);
+				message = in.readLine();  //code breaks here
+				out.println(message);
+
+				System.out.println( message);
 			} while (!message.equals("BYE"));
 		} catch (IOException e) {
 			e.printStackTrace();
