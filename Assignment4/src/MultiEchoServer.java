@@ -26,13 +26,14 @@ public class MultiEchoServer{
 			//Loop that detects clients, connects them, and allows them to send and receive messages
 			while (true) {
 				Socket socket = serverSock.accept();
-				System.out.println("[CONNECTED AT: " + socket.toString() + " ]");
+				System.out.println("[NEW USER CONNECTED AT: " + socket.toString() + " ]");
 
 				do {
 					//Initializes new ClientHandler thread for new client and adds
 					ClientHandler newClient = new ClientHandler(socket, this);
 					clientThreads.add(newClient);
 					newClient.run();
+					addUser(newClient.getName());
 
 					Socket client = null;
 					System.out.println("Listening for connection ...");
