@@ -29,7 +29,6 @@ public class MultiEchoClient{
 				out.println(message);
 				response = in.readLine();
 				System.out.println(response);
-
 			}
 			//Default conditions if client is not connecting to server
 			System.out.println("Enter message (BYE to quit)");
