@@ -57,7 +57,7 @@ public class MultiEchoClient{
 			//Default conditions if client is not connecting to server
 			System.out.println("Enter message (BYE to quit)");
 			message = kbd.readLine();
-			out.println(userName + " says: " + message);
+			out.println(userName + "[" + userName + "]" + message);
 //			response = in.readLine();
 //			System.out.println(response);
 		}
