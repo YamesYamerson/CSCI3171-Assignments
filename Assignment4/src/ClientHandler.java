@@ -30,14 +30,13 @@ public class ClientHandler extends Thread {
 			out = new PrintWriter(client.getOutputStream(), true);
 
 			//Creates and sets username for client from user input
-			if(login) {
+			if (login) {
 				String userName = in.readLine();
 				String userConnectMessage = "[NEW USER \"" + userName + "\" IS CONNECTED SO SERVER]";
 				System.out.println(userConnectMessage);
 				out.println(userConnectMessage);
 
-
-			}else if(!login){
+			} else if (!login) {
 				String message = in.readLine();
 				System.out.println(message);
 				out.println(message);
@@ -50,24 +49,28 @@ public class ClientHandler extends Thread {
 		//Relays and prints message information to server
 		String message = "";
 		try {
-			while(!message.equalsIgnoreCase("bye"))
-			do {
-				message = in.readLine();  //code breaks here
-				out.println(message);
+			while (!message.equalsIgnoreCase("bye")) {
+				do {
+					try {
+						message = in.readLine();  //code breaks here
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					out.println(message);
+					System.out.println(message);
 
-				System.out.println( message);
-			} while (!message.equals("BYE"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (client != null) {
-					System.out.println("Closing connection");
-					client.close();
+					try {
+						if (client != null) {
+							System.out.println("Closing connection");
+							client.close();
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
+		}catch (IOException e){
+			e.printStackTrace();
 		}
 	}
 
