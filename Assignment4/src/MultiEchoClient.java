@@ -11,10 +11,10 @@ public class MultiEchoClient{
 	private static BufferedReader in;
 	private static PrintWriter out;
 	private static BufferedReader kbd;
-	String userName;
+	private static String userName;
 
-	public static void run() throws Exception{
-		try{
+	public static void run() throws IOException {
+		try {
 			link = new Socket("127.0.0.1", PORT);
 			in = new BufferedReader(new InputStreamReader(link.getInputStream()));
 			out = new PrintWriter(link.getOutputStream(), true);
@@ -26,40 +26,48 @@ public class MultiEchoClient{
 			if (login) {
 				System.out.println("Enter your username (BYE to quit)");
 				message = kbd.readLine();
-				out.println(message);
+				userName = message;
+				out.println(userName);
+
 				response = in.readLine();
 				System.out.println(response);
 			}
-			//Default conditions if client is not connecting to server
-			System.out.println("Enter message (BYE to quit)");
-			message = kbd.readLine();
-			out.println(message);
-			response = in.readLine();
-			System.out.println(response);
 
-			//Exit conditions for server
-			while (!message.equals("BYE"));
-		}
-		catch(UnknownHostException e){System.exit(1);}
-		catch(IOException e){System.exit(1);}
-
-		//Checks link and closes it if it is null
-		finally{
-			try{
-				if (link!=null){
+			//Checks link and closes it if it is null
+			try {
+				if (link == null) {
 					System.out.println("Closing");
 					link.close();
 				}
+			} catch (IOException e) {
+				System.exit(1);
 			}
-			catch(IOException e){System.exit(1);}
-		}
 
-	}//end main
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			System.exit(1);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		String message = "", response;
+		//Exit conditions for server
+		while (!message.equals("BYE")) {
+
+			//Default conditions if client is not connecting to server
+			System.out.println("Enter message (BYE to quit)");
+			message = kbd.readLine();
+			out.println(userName + " says: " + message);
+//			response = in.readLine();
+//			System.out.println(response);
+		}
+	}//end run() method
 
 	public static void main(String[] args) throws Exception {
 		MultiEchoClient newClient= new MultiEchoClient();
 		newClient.run();
 	}
-}//end class MultiEchoClient
+}
+//end class MultiEchoClient
 	
 	
