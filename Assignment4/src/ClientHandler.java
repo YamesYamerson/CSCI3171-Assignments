@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ClientHandler extends Thread {
 	private Socket client;
@@ -54,17 +52,16 @@ public class ClientHandler extends Thread {
 
 		//Relays and prints message information from client to server
 		String message = "";
-		while (!message.equalsIgnoreCase("bye")) {
-				do {
-					try {
-						message = in.readLine();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					out.println(message);
-					System.out.println(message);
-				} while (!message.equals("BYE"));
+		do {
+			try {
+				message = in.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+			out.println(message);
+			System.out.println(message);
+		} while (!message.equals("BYE"));
+
 		if (client == null) {
 			System.out.println("Closing connection");
 			try {

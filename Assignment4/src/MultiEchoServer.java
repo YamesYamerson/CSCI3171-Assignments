@@ -21,28 +21,22 @@ public class MultiEchoServer{
 		try (ServerSocket serverSock = new ServerSocket(PORT)) {
 
 			//Prints successful server connection results
-			System.out.println("[SERVER LISTENING ON PORT " + PORT + "]");
+			System.out.println("[SERVER CONNECTED ON PORT " + PORT + ", LISTENING FOR CONNECTION...]");
 
 			//Loop that detects clients, connects them, and allows them to send and receive messages
 			while (true) {
 				Socket socket = serverSock.accept();
-				System.out.println("[NEW USER CONNECTED AT: " + socket.toString() + " ]");
+//				System.out.println("[NEW USER CONNECTED AT: " + socket.toString() + " ]");
 
 				do {
 					//Initializes new ClientHandler thread for new client and adds
-					ClientHandler newClient = new ClientHandler(socket, this);
-					clientThreads.add(newClient);
-					newClient.run();
-					addUser(newClient.getName());
-
-					Socket client = null;
-					System.out.println("Listening for connection ...");
+					//TO DO: Add username to list
 					try {
-						client = serverSock.accept();
+						Socket client = serverSock.accept();
 						System.out.println("[SERVER ACCEPTED NEW CLIENT " + client.toString() + "]");
 						ClientHandler handler = new ClientHandler(client, this);
-						handler.start();
-					} catch (IOException e) {
+						handler.run();
+					} catch (Exception e) {
 						System.out.println("[SERVER FAILED TO ACCEPT CLIENT");
 						System.exit(1);
 					}
@@ -57,7 +51,6 @@ public class MultiEchoServer{
 			System.exit(1);
 		}
 	}
-
 
 	//The main method will create the ServerSocket object and listens to inputs
 	//from multiple clients

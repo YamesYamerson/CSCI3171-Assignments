@@ -22,16 +22,12 @@ public class MultiEchoClient{
 			String message, response;
 
 			//Checks to see if client has just logged in and asks for username
-			boolean login = true;
-			if (login) {
-				System.out.println("Enter your username (BYE to quit)");
-				message = kbd.readLine();
-				userName = message;
-				out.println(userName);
+			System.out.println("Enter your username (BYE to quit)");
+			userName = kbd.readLine();
+			out.println(userName);
+//			response = in.readLine();
+//			System.out.println(response);
 
-				response = in.readLine();
-				System.out.println(response);
-			}
 
 			//Checks link and closes it if it is null
 			try {
@@ -57,10 +53,13 @@ public class MultiEchoClient{
 			//Default conditions if client is not connecting to server
 			System.out.println("Enter message (BYE to quit)");
 			message = kbd.readLine();
-			out.println(userName + "[" + userName + "]" + message);
+			out.println("[" + userName + "]: " + message);
 //			response = in.readLine();
 //			System.out.println(response);
 		}
+		System.out.println("Quitting Server...");
+		System.exit(1);
+
 	}//end run() method
 
 	//Main method to run MultiEchoClient
